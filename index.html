@@ -6,10 +6,49 @@
     <title>The Give Hub - Developer Documentation</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <style>
         :root {
+            /* Light theme variables */
             --sidebar-width: 260px;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --link-color: #0d6efd;
+            --code-bg: #f8f9fa;
+            --navbar-bg: #0d6efd;
+            --navbar-text: #ffffff;
         }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e9ecef;
+            --text-secondary: #adb5bd;
+            --border-color: #444444;
+            --link-color: #7cb3ff;
+            --code-bg: #2d2d2d;
+            --navbar-bg: #2d2d2d;
+            --navbar-text: #e9ecef;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--navbar-bg) !important;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--navbar-text);
+        }
+
         .sidebar {
             width: var(--sidebar-width);
             position: fixed;
@@ -17,14 +56,17 @@
             bottom: 0;
             left: 0;
             padding: 1rem;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             overflow-y: auto;
+            border-right: 1px solid var(--border-color);
         }
+
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 2rem;
             max-width: 1200px;
         }
+
         .api-method {
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
@@ -32,15 +74,83 @@
             font-weight: 600;
             margin-right: 0.5rem;
         }
+
         .method-get { background: #e3f2fd; color: #0d47a1; }
         .method-post { background: #e8f5e9; color: #1b5e20; }
         .method-put { background: #fff3e0; color: #e65100; }
         .method-delete { background: #ffebee; color: #b71c1c; }
+
         .stats-container {
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             padding: 1.5rem;
             border-radius: 8px;
             margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        .card-body {
+            color: var(--text-primary);
+        }
+
+        .list-group-item {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover {
+            color: var(--link-color);
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--link-color);
+            color: #ffffff;
+        }
+
+        pre {
+            background-color: var(--code-bg) !important;
+        }
+
+        .form-control {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus {
+            background-color: var(--bg-primary);
+            border-color: var(--link-color);
+            color: var(--text-primary);
+        }
+
+        .text-muted {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Theme toggle button styles */
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--navbar-text);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -51,15 +161,20 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="switchTheme()">Toggle Theme</a>
+                        <button class="theme-toggle" onclick="switchTheme()" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/givehub">GitHub</a>
+                        <a class="nav-link" href="https://github.com/thegivehub">GitHub</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                        <a class="nav-link" href="/dashboard.html">Dashboard</a>
                     </li>
-                </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Signup</a>
+                    </li>
+                 </ul>
             </div>
         </div>
     </nav>
@@ -94,7 +209,7 @@
                 <h1>The Give Hub Developer Platform</h1>
                 <p class="lead">Build applications that connect remote communities with global donors through our secure, blockchain-enabled crowdfunding platform.</p>
 
-                <div class="stats-container">
+                <!--div class="stats-container">
                     <div class="row text-center">
                         <div class="col-md-3">
                             <h3>$12M+</h3>
@@ -113,7 +228,7 @@
                             <p>Successful Projects</p>
                         </div>
                     </div>
-                </div>
+                </div-->
 
                 <h2>Quick Start</h2>
                 <div class="card mb-4">

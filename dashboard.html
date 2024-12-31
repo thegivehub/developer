@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Give Hub - Developer Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --sidebar-width: 250px;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #f8f9fa;
+            padding: 1rem;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .api-key-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .usage-chart {
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h5 class="mb-4">Developer Dashboard</h5>
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="#overview">
+                    <i class="fas fa-home"></i> Overview
+                </a>
+                <a class="nav-link" href="#api-keys">
+                    <i class="fas fa-key"></i> API Keys
+                </a>
+                <a class="nav-link" href="#usage">
+                    <i class="fas fa-chart-line"></i> Usage
+                </a>
+                <a class="nav-link" href="#webhooks">
+                    <i class="fas fa-plug"></i> Webhooks
+                </a>
+                <a class="nav-link" href="#logs">
+                    <i class="fas fa-list"></i> Logs
+                </a>
+                <a class="nav-link" href="#settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Developer Dashboard</h2>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-book"></i> Documentation
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-question-circle"></i> Support
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h6 class="text-muted">API Calls (24h)</h6>
+                        <h3>2,451</h3>
+                        <small class="text-success">↑ 12% from yesterday</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h6 class="text-muted">Average Response Time</h6>
+                        <h3>142ms</h3>
+                        <small class="text-success">↓ 8% from yesterday</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h6 class="text-muted">Error Rate</h6>
+                        <h3>0.4%</h3>
+                        <small class="text-success">↓ 2% from yesterday</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h6 class="text-muted">Active Integrations</h6>
+                        <h3>3</h3>
+                        <small class="text-muted">No change</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">API Keys</h5>
+                    <div class="api-key-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Production API Key</h6>
+                                <code>gh_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="api-key-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Sandbox API Key</h6>
+                                <code>gh_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recent API Calls</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Endpoint</th>
+                                <th>Status</th>
+                                <th>Response Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-03-15 10:30:15</td>
+                                <td>GET /campaigns</td>
+                                <td><span class="badge bg-success">200</span></td>
+                                <td>145ms</td>
+                            </tr>
+                            <tr>
+                                <td>2024-03-15 10:29:45</td>
+                                <td>POST /donations</td>
+                                <td><span class="badge bg-success">201</span></td>
+                                <td>232ms</td>
+                            </tr>
+                            <tr>
+                                <td>2024-03-15 10:28:30</td>
+                                <td>GET /metrics</td>
+                                <td><span class="badge bg-success">200</span></td>
+                                <td>89ms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            init() {
+                this.setupEventListeners();
+                this.loadDashboardData();
+                this.initializeChart();
+                this.refreshInterval = setInterval(() => this.refreshData(), 60000); // Refresh every minute
+            },
+
+            setupEventListeners() {
+                // Add click handlers for navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.navigateToSection(e.target.getAttribute('href').substring(1));
+                    });
+                });
+
+                // API key copy buttons
+                document.querySelectorAll('.api-key-card .dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const action = e.target.textContent.trim();
+                        const keyCard = e.target.closest('.api-key-card');
+                        const keyText = keyCard.querySelector('.api-key').textContent;
+
+                        switch(action) {
+                            case 'Copy Key':
+                                this.copyToClipboard(keyText);
+                                break;
+                            case 'Rotate Key':
+                                this.rotateApiKey(keyText);
+                                break;
+                            case 'Revoke Key':
+                                this.revokeApiKey(keyText);
+                                break;
+                        }
+                    });
+                });
+
+                // Event filter buttons
+                document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.btn-group .btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.filterEvents(e.target.textContent.toLowerCase());
+                    });
+                });
+            },
+
+            async loadDashboardData() {
+                try {
+                    const response = await fetch('/api/developer/dashboard');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.updateDashboardMetrics(data.data.metrics);
+                        this.updateApiKeys(data.data.apiKeys);
+                        this.updateEventsList(data.data.recentEvents);
+                        this.updateUsageChart(data.data.usageStats);
+                    } else {
+                        this.showError('Failed to load dashboard data');
+                    }
+                } catch (error) {
+                    console.error('Dashboard data error:', error);
+                    this.showError('Failed to load dashboard data');
+                }
+            },
+
+            updateDashboardMetrics(metrics) {
+                // Update the metrics cards with new data
+                document.querySelector('#apiCalls').textContent = metrics.current.total_calls.toLocaleString();
+                document.querySelector('#responseTime').textContent = `${metrics.current.avg_response_time}ms`;
+                document.querySelector('#errorRate').textContent = `${metrics.current.error_rate}%`;
+
+                // Update trends
+                this.updateTrend('#apiCallsTrend', metrics.changes.calls);
+                this.updateTrend('#responseTimeTrend', metrics.changes.response_time, true);
+                this.updateTrend('#errorRateTrend', metrics.changes.error_rate, true);
+            },
+
+            updateTrend(selector, value, lowerIsBetter = false) {
+                const element = document.querySelector(selector);
+                const isPositive = lowerIsBetter ? value < 0 : value > 0;
+                element.className = `trend ${isPositive ? 'positive' : 'negative'}`;
+                element.textContent = `${value > 0 ? '+' : ''}${value}%`;
+            },
+
+            initializeChart() {
+                const ctx = document.getElementById('apiUsageChart').getContext('2d');
+                this.usageChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'API Calls',
+                            data: [],
+                            borderColor: '#0d6efd',
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grace: '5%'
+                            }
+                        }
+                    }
+                });
+            },
+
+            updateUsageChart(data) {
+                this.usageChart.data.labels = data.map(d => d.hour);
+                this.usageChart.data.datasets[0].data = data.map(d => d.calls);
+                this.usageChart.update();
+            },
+
+            async createApiKey() {
+                const modal = new bootstrap.Modal(document.getElementById('newApiKeyModal'));
+                modal.show();
+            },
+
+            async submitNewApiKey() {
+                const form = document.getElementById('newApiKeyForm');
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/api/developer/api-keys', {
+                        method: 'POST',
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        bootstrap.Modal.getInstance(document.getElementById('newApiKeyModal')).hide();
+                        this.showSuccess('API key created successfully');
+                        this.loadDashboardData(); // Refresh data
+                    } else {
+                        this.showError(data.error || 'Failed to create API key');
+                    }
+                } catch (error) {
+                    console.error('API key creation error:', error);
+                    this.showError('Failed to create API key');
+                }
+            },
+
+            async createWebhook() {
+                const modal = new bootstrap.Modal(document.getElementById('newWebhookModal'));
+                modal.show();
+            },
+
+            async submitNewWebhook() {
+                const form = document.getElementById('newWebhookForm');
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/api/developer/webhooks', {
+                        method: 'POST',
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        bootstrap.Modal.getInstance(document.getElementById('newWebhookModal')).hide();
+                        this.showSuccess('Webhook endpoint added successfully');
+                        this.loadDashboardData(); // Refresh data
+                    } else {
+                        this.showError(data.error || 'Failed to add webhook endpoint');
+                    }
+                } catch (error) {
+                    console.error('Webhook creation error:', error);
+                    this.showError('Failed to add webhook endpoint');
+                }
+            },
+
+            copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    this.showSuccess('Copied to clipboard');
+                }).catch(err => {
+                    console.error('Copy failed:', err);
+                    this.showError('Failed to copy to clipboard');
+                });
+            },
+
+            showSuccess(message) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                alert.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alert);
+                setTimeout(() => alert.remove(), 3000);
+            },
+
+            showError(message) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                alert.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alert);
+                setTimeout(() => alert.remove(), 5000);
+            },
+
+            async refreshData() {
+                await this.loadDashboardData();
+            },
+
+            filterEvents(type) {
+                const rows = document.querySelectorAll('#eventsList tr');
+                rows.forEach(row => {
+                    if (type === 'all' || row.dataset.type === type) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        };
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>

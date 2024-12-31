@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Give Hub - Developer Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+        .api-method {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        .method-get { background: #e3f2fd; color: #0d47a1; }
+        .method-post { background: #e8f5e9; color: #1b5e20; }
+        .method-put { background: #fff3e0; color: #e65100; }
+        .method-delete { background: #ffebee; color: #b71c1c; }
+        .stats-container {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">The Give Hub Developers</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTheme()">Toggle Theme</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/givehub">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="d-flex">
+        <div class="sidebar border-end">
+            <div class="mb-4">
+                <input type="search" class="form-control" placeholder="Search docs..." id="searchDocs">
+            </div>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link active" href="#getting-started">Getting Started</a>
+                <a class="nav-link" href="#platform-overview">Platform Overview</a>
+                <a class="nav-link" href="#authentication">Authentication</a>
+                <a class="nav-link" href="#api-reference">API Reference</a>
+                <div class="ms-3">
+                    <a class="nav-link" href="#campaigns">Campaigns</a>
+                    <a class="nav-link" href="#donations">Donations</a>
+                    <a class="nav-link" href="#users">Users</a>
+                    <a class="nav-link" href="#impact">Impact Metrics</a>
+                    <a class="nav-link" href="#updates">Updates</a>
+                    <a class="nav-link" href="#notifications">Notifications</a>
+                </div>
+                <a class="nav-link" href="#sdks">SDKs</a>
+                <a class="nav-link" href="#webhooks">Webhooks</a>
+                <a class="nav-link" href="#blockchain">Blockchain Integration</a>
+                <a class="nav-link" href="#best-practices">Best Practices</a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <section id="getting-started">
+                <h1>The Give Hub Developer Platform</h1>
+                <p class="lead">Build applications that connect remote communities with global donors through our secure, blockchain-enabled crowdfunding platform.</p>
+
+                <div class="stats-container">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h3>$12M+</h3>
+                            <p>Funds Distributed</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h3>450+</h3>
+                            <p>Active Projects</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h3>32</h3>
+                            <p>Countries Served</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h3>98.5%</h3>
+                            <p>Successful Projects</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Quick Start</h2>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Get Started in 3 Steps</h5>
+                        <ol>
+                            <li>Create a developer account and get your API keys</li>
+                            <li>Install our SDK for your platform</li>
+                            <li>Make your first API call</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-javascript">
+// Initialize the app
+const app = {
+    init() {
+        // Initialize The Give Hub client
+        this.client = new GiveHubSDK({
+            apiKey: 'YOUR_API_KEY',
+            environment: 'sandbox' // or 'production'
+        });
+        
+        // Set up event listeners
+        this.setupEventListeners();
+    },
+    
+    async createCampaign() {
+        try {
+            const campaign = await this.client.campaigns.create({
+                title: 'Solar-Powered Water Pump',
+                description: 'Providing clean water access to remote village',
+                targetAmount: 5000,
+                location: {
+                    country: 'Kenya',
+                    region: 'Samburu'
+                }
+            });
+            console.log('Campaign created:', campaign.id);
+        } catch (error) {
+            console.error('Error creating campaign:', error);
+        }
+    }
+};
+
+// Initialize app
+window.app = app;
+app.init();</code></pre>
+                </div>
+            </section>
+
+            <section id="platform-overview" class="mt-5">
+                <h2>Platform Overview</h2>
+                <p>Since our launch in 2021, The Give Hub has been connecting remote communities with global donors through our blockchain-enabled platform. Our infrastructure is built on three core principles:</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Transparency</h5>
+                                <p class="card-text">Every transaction is recorded on the Stellar blockchain, providing immutable proof of fund movement and utilization.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Impact Verification</h5>
+                                <p class="card-text">Our unique impact tracking system ensures donors can see the real-world results of their contributions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Global Access</h5>
+                                <p class="card-text">Supporting 32 countries with mobile-first infrastructure and minimal technical requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="authentication" class="mt-5">
+                <h2>Authentication</h2>
+                <p>The Give Hub uses JWT-based authentication. All API requests must include an Authorization header with a valid access token.</p>
+                
+                <div class="code-block">
+                    <pre><code class="language-javascript">
+// Authenticate user
+async function login(email, password) {
+    try {
+        const response = await app.client.auth.login(email, password);
+        localStorage.setItem('accessToken', response.tokens.accessToken);
+        localStorage.setItem('refreshToken', response.tokens.refreshToken);
+        return response.user;
+    } catch (error) {
+        console.error('Authentication failed:', error);
+        throw error;
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="api-reference" class="mt-5">
+                <h2>API Reference</h2>
+                
+                <div id="campaigns" class="endpoint-section">
+                    <h3>Campaigns</h3>
+                    
+                    <div class="endpoint mb-4">
+                        <h4>
+                            <span class="api-method method-get">GET</span>
+                            /v1/campaigns
+                        </h4>
+                        <p>List all campaigns with optional filtering</p>
+                        <div class="code-block">
+                            <pre><code class="language-javascript">
+// List active campaigns
+const campaigns = await app.client.campaigns.list({
+    status: 'active',
+    category: 'water',
+    limit: 20,
+    page: 1
+});</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="endpoint mb-4">
+                        <h4>
+                            <span class="api-method method-post">POST</span>
+                            /v1/campaigns
+                        </h4>
+                        <p>Create a new campaign</p>
+                        <div class="code-block">
+                            <pre><code class="language-javascript">
+// Create new campaign
+const campaign = await app.client.campaigns.create({
+    title: 'Community Solar Project',
+    description: 'Installing solar panels for school',
+    targetAmount: 15000,
+    category: 'energy',
+    location: {
+        country: 'Tanzania',
+        coordinates: [-6.369028, 34.888822]
+    },
+    milestones: [
+        {
+            title: 'Equipment Purchase',
+            amount: 8000,
+            description: 'Solar panels and inverters'
+        },
+        {
+            title: 'Installation',
+            amount: 7000,
+            description: 'Professional installation and training'
+        }
+    ]
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="donations" class="endpoint-section">
+                    <h3>Donations</h3>
+                    
+                    <div class="endpoint mb-4">
+                        <h4>
+                            <span class="api-method method-post">POST</span>
+                            /v1/donations
+                        </h4>
+                        <p>Process a donation</p>
+                        <div class="code-block">
+                            <pre><code class="language-javascript">
+// Process donation with Stellar
+const donation = await app.client.donations.create({
+    campaignId: 'campaign_123',
+    amount: {
+        value: 100,
+        currency: 'USD'
+    },
+    type: 'one-time',
+    donor: {
+        walletAddress: 'GXXXXXXXXXXXXXXXXXXXXXX'
+    }
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="impact" class="endpoint-section">
+                    <h3>Impact Metrics</h3>
+                    
+                    <div class="endpoint mb-4">
+                        <h4>
+                            <span class="api-method method-post">POST</span>
+                            /v1/impact/metrics
+                        </h4>
+                        <p>Record impact metrics for a campaign</p>
+                        <div class="code-block">
+                            <pre><code class="language-javascript">
+// Update impact metrics
+const impact = await app.client.impact.updateMetrics('campaign_123', {
+    metrics: [
+        {
+            name: 'People Served',
+            value: 250,
+            unit: 'individuals',
+            verificationMethod: 'community_survey'
+        },
+        {
+            name: 'Solar Output',
+            value: 5000,
+            unit: 'watts',
+            verificationMethod: 'meter_reading'
+        }
+    ]
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sdks" class="mt-5">
+                <h2>SDKs & Libraries</h2>
+                <p>We provide official SDKs for JavaScript, Python, and PHP to help you integrate with The Give Hub platform quickly and securely.</p>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">JavaScript SDK</h5>
+                                <p class="card-text">Complete SDK for browser and Node.js environments.</p>
+                                <pre><code class="language-bash">npm install @givehub/sdk</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Python SDK</h5>
+                                <p class="card-text">Python SDK for backend integration.</p>
+                                <pre><code class="language-bash">pip install givehub-sdk</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">PHP SDK</h5>
+                                <p class="card-text">PHP SDK for web applications.</p>
+                                <pre><code class="language-bash">composer require givehub/sdk</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="blockchain" class="mt-5">
+                <h2>Blockchain Integration</h2>
+                <p>The Give Hub leverages the Stellar blockchain for transparent and efficient fund management. Our Soroban smart contracts handle:
+
+                <ul class="list-group mb-4">
+                    <li class="list-group-item">Automated milestone-based fund releases</li>
+                    <li class="list-group-item">Multi-signature verification for large transactions</li>
+                    <li class="list-group-item">Impact metric verification and storage</li>
+                    <li class="list-group-item">Cross-border payment processing</li>
+                </ul>
+
+                <div class="code-block">
+                    <pre><code class="language-javascript">
+// Example: Process milestone verification and fund release
+const milestoneVerification = await app.client.campaigns.verifyMilestone({
+    campaignId: 'campaign_123',
+    milestoneId: 'milestone_456',
+    verification: {
+        status: 'completed',
+        evidence: [{
+            type: 'image',
+            url: 'https://storage.givehub.org/evidence/123.jpg',
+            timestamp: '2024-03-15T10:30:00Z'
+        }],
+        verifierSignature: 'GXXXXXXXXXXXXXXXXXXXXXX'
+    }
+});</code></pre>
+                </div>
+            </section>
+
+            <section id="webhooks" class="mt-5">
+                <h2>Webhooks</h2>
+                <p>Stay updated with real-time events by configuring webhooks for your application. We'll send HTTP POST requests to your endpoint whenever relevant events occur.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-javascript">
+// Example webhook payload for successful donation
+{
+    "event": "donation.completed",
+    "created": "2024-03-15T10:30:00Z",
+    "data": {
+        "donationId": "don_123",
+        "campaignId": "campaign_456",
+        "amount": {
+            "value": "100.00",
+            "currency": "USD"
+        },
+        "status": "completed",
+        "transaction": {
+            "stellarTxId": "tx_789",
+            "timestamp": "2024-03-15T10:30:00Z"
+        }
+    }
+}</code></pre>
+                </div>
+
+                <h4 class="mt-4">Available Webhook Events</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">donation.completed</li>
+                    <li class="list-group-item">campaign.milestone.reached</li>
+                    <li class="list-group-item">campaign.funded</li>
+                    <li class="list-group-item">impact.verified</li>
+                    <li class="list-group-item">user.verified</li>
+                </ul>
+            </section>
+
+            <section id="best-practices" class="mt-5">
+                <h2>Best Practices</h2>
+                <p>Follow these guidelines to build reliable and efficient integrations with The Give Hub platform:</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Error Handling</h5>
+                                <ul class="list-unstyled">
+                                    <li>✓ Implement proper error handling</li>
+                                    <li>✓ Retry failed requests with exponential backoff</li>
+                                    <li>✓ Monitor webhook delivery status</li>
+                                    <li>✓ Handle rate limiting gracefully</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Security</h5>
+                                <ul class="list-unstyled">
+                                    <li>✓ Store API keys securely</li>
+                                    <li>✓ Validate webhook signatures</li>
+                                    <li>✓ Use HTTPS for all requests</li>
+                                    <li>✓ Implement proper authentication</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <h5>Development Support</h5>
+                    <p class="mb-0">Need help with your integration? Join our developer community on Discord or contact our support team at developers@givehub.org.</p>
+                </div>
+            </section>
+
+            <footer class="mt-5 pt-4 border-top">
+                <div class="row">
+                    <div class="col-12 col-md">
+                        <small class="d-block mb-3 text-muted">© 2021-2024 The Give Hub</small>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5>Resources</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#">API Status</a></li>
+                            <li><a class="text-muted" href="#">Change Log</a></li>
+                            <li><a class="text-muted" href="#">Support</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5>Community</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#">Discord</a></li>
+                            <li><a class="text-muted" href="#">GitHub</a></li>
+                            <li><a class="text-muted" href="#">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

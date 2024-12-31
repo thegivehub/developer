@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
     <title>The Give Hub - Developer Documentation</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <!-- Add dark theme CSS that will be activated with theme switcher -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" rel="stylesheet" disabled id="hljs-dark-theme">
     <style>
         :root {
             /* Light theme variables */
@@ -80,14 +83,6 @@
         .method-put { background: #fff3e0; color: #e65100; }
         .method-delete { background: #ffebee; color: #b71c1c; }
 
-        .stats-container {
-            background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            border: 1px solid var(--border-color);
-        }
-
         .card {
             background-color: var(--bg-secondary);
             border-color: var(--border-color);
@@ -125,11 +120,23 @@
             border-color: var(--border-color);
             color: var(--text-primary);
         }
+        
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
 
         .form-control:focus {
             background-color: var(--bg-primary);
             border-color: var(--link-color);
             color: var(--text-primary);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .search-highlight {
+            background-color: rgba(255, 255, 0, 0.2);
+            padding: 0.1rem 0.2rem;
+            border-radius: 2px;
         }
 
         .text-muted {
@@ -169,12 +176,9 @@
                         <a class="nav-link" href="https://github.com/thegivehub">GitHub</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard.html">Dashboard</a>
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register.html">Signup</a>
-                    </li>
-                 </ul>
+                </ul>
             </div>
         </div>
     </nav>
@@ -208,27 +212,6 @@
             <section id="getting-started">
                 <h1>The Give Hub Developer Platform</h1>
                 <p class="lead">Build applications that connect remote communities with global donors through our secure, blockchain-enabled crowdfunding platform.</p>
-
-                <!--div class="stats-container">
-                    <div class="row text-center">
-                        <div class="col-md-3">
-                            <h3>$12M+</h3>
-                            <p>Funds Distributed</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>450+</h3>
-                            <p>Active Projects</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>32</h3>
-                            <p>Countries Served</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>98.5%</h3>
-                            <p>Successful Projects</p>
-                        </div>
-                    </div>
-                </div-->
 
                 <h2>Quick Start</h2>
                 <div class="card mb-4">
@@ -589,7 +572,7 @@ const milestoneVerification = await app.client.campaigns.verifyMilestone({
 
                 <div class="alert alert-info">
                     <h5>Development Support</h5>
-                    <p class="mb-0">Need help with your integration? Join our developer community on Discord or contact our support team at developers@givehub.org.</p>
+                    <p class="mb-0">Need help with your integration? Join our developer community on <a href="https://discord.gg/2NR46tPC" target="_blank">Discord</a> or contact our support team at developers@givehub.org.</p>
                 </div>
             </section>
 
@@ -620,7 +603,218 @@ const milestoneVerification = await app.client.campaigns.verifyMilestone({
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script>
+        const themeSwitcher = {
+            init() {
+                // Load saved theme on startup
+                this.loadSavedTheme();
+                
+                // Add click handler for theme toggle button
+                document.querySelector('.theme-toggle').addEventListener('click', () => this.toggleTheme());
+            },
+
+            toggleTheme() {
+                // Get current theme
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                
+                // Toggle theme
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Apply theme
+                this.applyTheme(newTheme);
+                
+                // Save preference
+                localStorage.setItem('theme', newTheme);
+            },
+
+            applyTheme(theme) {
+                // Set theme attribute on root element
+                document.documentElement.setAttribute('data-theme', theme);
+                
+                // Update toggle button icon
+                const toggleButton = document.querySelector('.theme-toggle i');
+                if (toggleButton) {
+                    toggleButton.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+                
+                // Update meta theme-color for mobile browsers
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                if (metaThemeColor) {
+                    metaThemeColor.setAttribute('content', theme === 'dark' ? '#1a1a1a' : '#ffffff');
+                }
+
+                // Handle syntax highlighting theme
+                updateCodeTheme(theme === 'dark');
+            },
+
+            loadSavedTheme() {
+                // Check if theme is saved in localStorage
+                const savedTheme = localStorage.getItem('theme');
+                
+                // Check system preference if no saved theme
+                if (!savedTheme) {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    this.applyTheme(prefersDark ? 'dark' : 'light');
+                    return;
+                }
+                
+                // Apply saved theme
+                this.applyTheme(savedTheme);
+            }
+        };
+
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+
+        // Function to update code highlighting theme
+        const updateCodeTheme = (isDark) => {
+            const lightTheme = document.querySelector('link[href*="github.min.css"]:not([href*="dark"])');
+            const darkTheme = document.querySelector('#hljs-dark-theme');
+            if (isDark) {
+                lightTheme.disabled = true;
+                darkTheme.disabled = false;
+            } else {
+                lightTheme.disabled = false;
+                darkTheme.disabled = true;
+            }
+        };
+
+        // Initialize theme switcher and search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            themeSwitcher.init();
+
+            // Enhanced search functionality
+            const searchDocs = (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const sections = document.querySelectorAll('section');
+                
+                // Clear previous highlights
+                document.querySelectorAll('.search-highlight').forEach(el => {
+                    const parent = el.parentNode;
+                    parent.replaceChild(document.createTextNode(el.textContent), el);
+                });
+                
+                sections.forEach(section => {
+                    if (!searchTerm) {
+                        section.style.display = 'block';
+                        return;
+                    }
+
+                    let sectionContent = section.innerText;
+                    let matched = sectionContent.toLowerCase().includes(searchTerm);
+                    
+                    // Handle code blocks separately to avoid breaking syntax highlighting
+                    const codeBlocks = section.querySelectorAll('pre code');
+                    codeBlocks.forEach(block => {
+                        if (block.textContent.toLowerCase().includes(searchTerm)) {
+                            matched = true;
+                        }
+                    });
+
+                    if (matched) {
+                        section.style.display = 'block';
+                        
+                        // Highlight matches in text (excluding code blocks)
+                        highlightMatches(section, searchTerm);
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+                // Update sidebar active states based on visible sections
+                updateSidebarActiveStates();
+            };
+
+            // Function to highlight matching text
+            const highlightMatches = (element, searchTerm) => {
+                if (!searchTerm) return;
+
+                // Skip code blocks and their parents
+                if (element.tagName === 'PRE' || element.tagName === 'CODE' || 
+                    element.closest('pre') || element.closest('code')) {
+                    return;
+                }
+
+                // Process child nodes
+                Array.from(element.childNodes).forEach(node => {
+                    if (node.nodeType === 3) { // Text node
+                        const text = node.textContent;
+                        const lowerText = text.toLowerCase();
+                        let index = lowerText.indexOf(searchTerm);
+                        
+                        if (index >= 0) {
+                            const span = document.createElement('span');
+                            span.className = 'search-highlight';
+                            span.textContent = text.substring(index, index + searchTerm.length);
+                            
+                            const before = document.createTextNode(text.substring(0, index));
+                            const after = document.createTextNode(text.substring(index + searchTerm.length));
+                            
+                            const parent = node.parentNode;
+                            parent.insertBefore(before, node);
+                            parent.insertBefore(span, node);
+                            parent.insertBefore(after, node);
+                            parent.removeChild(node);
+                        }
+                    } else if (node.nodeType === 1) { // Element node
+                        highlightMatches(node, searchTerm);
+                    }
+                });
+            };
+
+            // Function to update sidebar active states
+            const updateSidebarActiveStates = () => {
+                const visibleSections = Array.from(document.querySelectorAll('section'))
+                    .filter(section => section.style.display !== 'none')
+                    .map(section => section.id);
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const href = link.getAttribute('href').substring(1); // Remove #
+                    link.classList.toggle('active', visibleSections.includes(href));
+                });
+            };
+
+            // Attach search handler with debounce
+            let searchTimeout;
+            document.getElementById('searchDocs').addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => searchDocs(e), 200);
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Active section highlighting
+            const observeSection = () => {
+                const sections = document.querySelectorAll('section');
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.pageYOffset >= sectionTop - 60) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
+                });
+            };
+
+            window.addEventListener('scroll', observeSection);
+            observeSection(); // Initial check
+        });
+    </script>
 </body>
 </html>

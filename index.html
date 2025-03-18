@@ -165,7 +165,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">The Give Hub Developers</a>
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <button class="theme-toggle" onclick="switchTheme()" aria-label="Toggle theme">
@@ -177,6 +180,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="api-status.html">API Status</a>
                     </li>
                 </ul>
             </div>
@@ -205,6 +211,18 @@
                 <a class="nav-link" href="#webhooks">Webhooks</a>
                 <a class="nav-link" href="#blockchain">Blockchain Integration</a>
                 <a class="nav-link" href="#best-practices">Best Practices</a>
+            </nav>
+            
+            <hr class="my-3">
+            
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-1 mb-2 text-muted">
+                <span>Resources</span>
+            </h6>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="changelog.html">Changelog</a>
+                <a class="nav-link" href="api-status.html">API Status</a>
+                <a class="nav-link" href="https://discord.gg/2NR46tPC">Discord Community</a>
+                <a class="nav-link" href="mailto:developers@givehub.org">Contact Support</a>
             </nav>
         </div>
 
@@ -584,17 +602,17 @@ const milestoneVerification = await app.client.campaigns.verifyMilestone({
                     <div class="col-6 col-md">
                         <h5>Resources</h5>
                         <ul class="list-unstyled text-small">
-                            <li><a class="text-muted" href="#">API Status</a></li>
-                            <li><a class="text-muted" href="#">Change Log</a></li>
-                            <li><a class="text-muted" href="#">Support</a></li>
+                            <li><a class="text-muted" href="api-status.html">API Status</a></li>
+                            <li><a class="text-muted" href="changelog.html">Change Log</a></li>
+                            <li><a class="text-muted" href="mailto:developers@givehub.org">Support</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md">
                         <h5>Community</h5>
                         <ul class="list-unstyled text-small">
-                            <li><a class="text-muted" href="#">Discord</a></li>
-                            <li><a class="text-muted" href="#">GitHub</a></li>
-                            <li><a class="text-muted" href="#">Blog</a></li>
+                            <li><a class="text-muted" href="https://discord.gg/2NR46tPC">Discord</a></li>
+                            <li><a class="text-muted" href="https://github.com/thegivehub">GitHub</a></li>
+                            <li><a class="text-muted" href="https://blog.givehub.org">Blog</a></li>
                         </ul>
                     </div>
                 </div>

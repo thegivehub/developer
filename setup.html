@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>setup</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #232629;
+        color: #7a7c7d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cfcfc2; background-color: #232629; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #cfcfc2; } /* Normal */
+    code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+    code span.an { color: #3f8058; } /* Annotation */
+    code span.at { color: #2980b9; } /* Attribute */
+    code span.bn { color: #f67400; } /* BaseN */
+    code span.bu { color: #7f8c8d; } /* BuiltIn */
+    code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #3daee9; } /* Char */
+    code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+    code span.co { color: #7a7c7d; } /* Comment */
+    code span.cv { color: #7f8c8d; } /* CommentVar */
+    code span.do { color: #a43340; } /* Documentation */
+    code span.dt { color: #2980b9; } /* DataType */
+    code span.dv { color: #f67400; } /* DecVal */
+    code span.er { color: #da4453; text-decoration: underline; } /* Error */
+    code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #f67400; } /* Float */
+    code span.fu { color: #8e44ad; } /* Function */
+    code span.im { color: #27ae60; } /* Import */
+    code span.in { color: #c45b00; } /* Information */
+    code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+    code span.op { color: #cfcfc2; } /* Operator */
+    code span.ot { color: #27ae60; } /* Other */
+    code span.pp { color: #27ae60; } /* Preprocessor */
+    code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #da4453; } /* SpecialString */
+    code span.st { color: #f44f4f; } /* String */
+    code span.va { color: #27aeae; } /* Variable */
+    code span.vs { color: #da4453; } /* VerbatimString */
+    code span.wa { color: #da4453; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
+</head>
+<body>
+<h1
+id="setting-up-remote-ssh-in-vs-code-for-the-give-hub-project">Setting
+Up Remote SSH in VS Code for The Give Hub Project</h1>
+<p>These instructions will guide you through setting up a remote SSH
+connection in VS Code to work with The Give Hub crowdfunding platform
+files, along with the Git workflow for feature development.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ol type="1">
+<li>VS Code installed on your local machine</li>
+<li>SSH access to the server (make sure you have login credentials)</li>
+<li>Your SSH key added to your GitHub account for repository access</li>
+</ol>
+<h2 id="part-1-setting-up-remote-ssh-in-vs-code">Part 1: Setting Up
+Remote SSH in VS Code</h2>
+<h3 id="step-1-install-the-remote-development-extension">Step 1: Install
+the Remote Development Extension</h3>
+<ol type="1">
+<li>Open VS Code</li>
+<li>Click on the Extensions icon in the sidebar (or press
+Ctrl+Shift+X)</li>
+<li>Search for “Remote Development”</li>
+<li>Click “Install” on the “Remote Development” extension pack by
+Microsoft</li>
+<li>Wait for the installation to complete (VS Code may need to
+reload)</li>
+</ol>
+<h3 id="step-2-configure-ssh-connection">Step 2: Configure SSH
+Connection</h3>
+<ol type="1">
+<li>Press Ctrl+Shift+P to open the Command Palette</li>
+<li>Type “Remote-SSH: Open Configuration File” and select it</li>
+<li>Select the first option for your SSH config file (usually
+<code>~/.ssh/config</code>)</li>
+<li>Add the following configuration (replace placeholders with actual
+values):</li>
+</ol>
+<pre><code>Host givehub-server
+    HostName [server-ip-address]
+    User kev
+    IdentityFile ~/.ssh/[your-private-key-filename]
+    Port 22</code></pre>
+<ol start="5" type="1">
+<li>Save the file (Ctrl+S)</li>
+</ol>
+<h3 id="step-3-connect-to-the-server">Step 3: Connect to the Server</h3>
+<ol type="1">
+<li>Press Ctrl+Shift+P again</li>
+<li>Type “Remote-SSH: Connect to Host”</li>
+<li>Select “givehub-server” from the list</li>
+<li>A new VS Code window will open. If prompted about the host
+authenticity, click “Continue”</li>
+<li>If prompted for a password, enter it (or your SSH key passphrase if
+applicable)</li>
+<li>Wait for VS Code to set up the connection (this might take a minute
+the first time)</li>
+</ol>
+<h3 id="step-4-open-the-give-hub-project-folder">Step 4: Open The Give
+Hub Project Folder</h3>
+<ol type="1">
+<li>When connected, click on “Open Folder” in VS Code</li>
+<li>Navigate to
+<code>/home/kev/domains/thegivehgub.com/app-kev</code></li>
+<li>Click “OK”</li>
+<li>Wait for VS Code to load the project files</li>
+</ol>
+<h3 id="step-5-install-helpful-php-and-mongodb-extensions">Step 5:
+Install Helpful PHP and MongoDB Extensions</h3>
+<p>In the remote VS Code window: 1. Go to Extensions (Ctrl+Shift+X) 2.
+Search for and install: - “PHP Intelephense” (or “PHP IntelliSense”) -
+“PHP Debug” - “MongoDB for VS Code”</p>
+<h2 id="part-2-setting-up-git-for-the-give-hub-project">Part 2: Setting
+Up Git for The Give Hub Project</h2>
+<h3 id="step-1-configure-git-on-the-server">Step 1: Configure Git on the
+Server</h3>
+<ol type="1">
+<li>Open the integrated terminal in VS Code (Ctrl+`)</li>
+<li>Configure your Git identity:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">&quot;Your Name&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">&quot;your.email@example.com&quot;</span></span></code></pre></div>
+<h3 id="step-2-clone-the-give-hub-repository">Step 2: Clone The Give Hub
+Repository</h3>
+<ol type="1">
+<li>In the integrated terminal, navigate to the appropriate
+directory:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/kev/domains/thegivehgub.com/</span></code></pre></div>
+<ol start="2" type="1">
+<li>Clone the repository:</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:thegivehub/app.git app-kev</span></code></pre></div>
+<ol start="3" type="1">
+<li>If you’ve already cloned the repository but need to set the remote
+origin:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/kev/domains/thegivehgub.com/app-kev</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote set-url origin git@github.com:thegivehub/app.git</span></code></pre></div>
+<ol start="4" type="1">
+<li>Verify the remote is set correctly:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span></code></pre></div>
+<p>It should show:
+<code>origin git@github.com:thegivehub/app.git (fetch)</code> and
+<code>origin git@github.com:thegivehub/app.git (push)</code></p>
+<h2 id="part-3-development-workflow-for-the-give-hub">Part 3:
+Development Workflow for The Give Hub</h2>
+<h3 id="creating-a-new-feature">Creating a New Feature</h3>
+<ol type="1">
+<li>Always start by pulling the latest changes from the main
+branch:</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code></pre></div>
+<ol start="2" type="1">
+<li>Create a new branch for your feature:</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/your-feature-name</span></code></pre></div>
+<ol start="3" type="1">
+<li>Work on your changes using VS Code’s editor</li>
+</ol>
+<h3 id="saving-your-work">Saving Your Work</h3>
+<ol type="1">
+<li>Check which files you’ve modified:</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code></pre></div>
+<ol start="2" type="1">
+<li>Add your changes:</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span></code></pre></div>
+<ol start="3" type="1">
+<li>Commit your changes with a descriptive message:</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;Add feature: detailed description of your changes&quot;</span></span></code></pre></div>
+<ol start="4" type="1">
+<li>Push your branch to GitHub:</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin feature/your-feature-name</span></code></pre></div>
+<h3 id="creating-a-pull-request">Creating a Pull Request</h3>
+<ol type="1">
+<li>Go to <a href="https://github.com/thegivehub/app">The Give Hub
+GitHub repository</a></li>
+<li>You should see a banner suggesting to create a PR for your recently
+pushed branch</li>
+<li>Click “Compare &amp; pull request”</li>
+<li>Fill in:
+<ul>
+<li>Title: Clear description of the feature (e.g., “Add Stellar
+blockchain transaction viewer”)</li>
+<li>Description: Details about what the feature does and how it
+works</li>
+</ul></li>
+<li>Click “Create pull request”</li>
+</ol>
+<h3 id="handling-feedback-and-updates">Handling Feedback and
+Updates</h3>
+<p>If you receive feedback on your PR:</p>
+<ol type="1">
+<li>Make the requested changes in VS Code</li>
+<li>Add and commit the changes:</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;Address feedback: describe the changes&quot;</span></span></code></pre></div>
+<ol start="3" type="1">
+<li>Push the changes:</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<ol start="4" type="1">
+<li>The PR will update automatically</li>
+</ol>
+<h2 id="troubleshooting-common-issues">Troubleshooting Common
+Issues</h2>
+<h3 id="ssh-connection-problems">SSH Connection Problems</h3>
+<p>If you can’t connect: 1. Verify your SSH key is in the correct
+location 2. Make sure you have the right server address and username 3.
+Check that your SSH key is added to the server’s authorized_keys
+file</p>
+<h3 id="git-authentication-issues">Git Authentication Issues</h3>
+<p>If you get “Permission denied” errors with GitHub: 1. Verify your SSH
+key is added to your GitHub account 2. Test your SSH connection:
+<code>ssh -T git@github.com</code> 3. Make sure you’re using the SSH URL
+(git@github.com:thegivehub/app.git) not HTTPS</p>
+<h3 id="phpmongodb-connection-issues">PHP/MongoDB Connection Issues</h3>
+<p>For database connection problems: 1. Check MongoDB connection
+settings in the project’s configuration files 2. Verify MongoDB is
+running on the server: <code>sudo systemctl status mongodb</code> 3.
+Test connection via terminal: <code>mongo</code></p>
+<h2 id="remember">Remember</h2>
+<ul>
+<li>The Give Hub is a Stellar blockchain-based crowdfunding platform for
+social causes</li>
+<li>The project structure follows the domain-based organization
+pattern</li>
+<li>Always pull the latest changes before starting new work</li>
+<li>Create specific feature branches for each new development task</li>
+<li>Push regularly to avoid losing work</li>
+</ul>
+<p>Feel free to reach out for help if you encounter any issues during
+setup!</p>
+</body>
+</html>

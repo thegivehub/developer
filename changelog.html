@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>The Give Hub - Changelog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" rel="stylesheet" disabled id="hljs-dark-theme">
+    <style>
+        :root {
+            /* Light theme variables */
+            --sidebar-width: 260px;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --link-color: #0d6efd;
+            --code-bg: #f8f9fa;
+            --navbar-bg: #0d6efd;
+            --navbar-text: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e9ecef;
+            --text-secondary: #adb5bd;
+            --border-color: #444444;
+            --link-color: #7cb3ff;
+            --code-bg: #2d2d2d;
+            --navbar-bg: #2d2d2d;
+            --navbar-text: #e9ecef;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--navbar-bg) !important;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--navbar-text);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-body {
+            color: var(--text-primary);
+        }
+
+        .version-title {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .version-badge {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+            border-radius: 6px;
+            font-weight: 600;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+
+        .badge-feature {
+            background-color: #3cb371;
+            color: white;
+        }
+
+        .badge-fix {
+            background-color: #4682b4;
+            color: white;
+        }
+
+        .badge-security {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-improvement {
+            background-color: #6f42c1;
+            color: white;
+        }
+
+        .badge-deprecation {
+            background-color: #fd7e14;
+            color: white;
+        }
+
+        .change-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .change-list li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .change-list li:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--link-color);
+        }
+
+        .release-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover {
+            color: var(--link-color);
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--link-color);
+            color: #ffffff;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--navbar-text);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+        }
+        
+        /* Year separator */
+        .year-separator {
+            color: var(--text-secondary);
+            margin: 2rem 0 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Version filter */
+        .filter-badges {
+            margin-bottom: 2rem;
+        }
+
+        .filter-badge {
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            display: inline-block;
+        }
+
+        .filter-badge.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">The Give Hub Developers</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="theme-toggle" onclick="switchTheme()" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/thegivehub">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="d-flex">
+        <div class="sidebar border-end">
+            <div class="mb-4">
+                <input type="search" class="form-control" placeholder="Search changes..." id="searchChanges">
+            </div>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="index.html">Back to Docs</a>
+                <a class="nav-link active" href="changelog.html">Changelog</a>
+                <a class="nav-link" href="api-status.html">API Status</a>
+            </nav>
+            <div class="mt-4">
+                <h6>Years</h6>
+                <nav class="nav nav-pills flex-column">
+                    <a class="nav-link" href="#2024">2024</a>
+                    <a class="nav-link" href="#2023">2023</a>
+                    <a class="nav-link" href="#2022">2022</a>
+                    <a class="nav-link" href="#2021">2021</a>
+                </nav>
+            </div>
+            <div class="mt-4">
+                <h6>Major Versions</h6>
+                <nav class="nav nav-pills flex-column">
+                    <a class="nav-link" href="#v2">v2.x</a>
+                    <a class="nav-link" href="#v1">v1.x</a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1>Changelog</h1>
+            <p class="lead">A detailed record of all notable changes to The Give Hub platform.</p>
+            
+            <div class="filter-badges">
+                <span class="badge filter-badge active" data-filter="all">All Changes</span>
+                <span class="badge badge-feature filter-badge" data-filter="feature">Features</span>
+                <span class="badge badge-improvement filter-badge" data-filter="improvement">Improvements</span>
+                <span class="badge badge-fix filter-badge" data-filter="fix">Fixes</span>
+                <span class="badge badge-security filter-badge" data-filter="security">Security</span>
+                <span class="badge badge-deprecation filter-badge" data-filter="deprecation">Deprecations</span>
+            </div>
+
+            <h3 class="year-separator" id="2024">2024</h3>
+            
+            <div class="card" id="v2-2-0" data-version="v2">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v2.2.0
+                        <span class="release-date">March 2, 2024</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Introduced Soroban smart contracts for automated milestone verification.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Added real-time campaign status updates through websockets.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Enhanced performance of campaign listing API with optimized database queries.
+                        </li>
+                        <li data-type="fix">
+                            <span class="badge version-badge badge-fix">Fix</span>
+                            Fixed an issue with donation timestamps in webhook payloads.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" id="v2-1-0" data-version="v2">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v2.1.0
+                        <span class="release-date">January 15, 2024</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Added support for multi-currency donations.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Expanded impact metrics API with customizable verification methods.
+                        </li>
+                        <li data-type="security">
+                            <span class="badge version-badge badge-security">Security</span>
+                            Implemented enhanced JWT validation and security measures.
+                        </li>
+                        <li data-type="fix">
+                            <span class="badge version-badge badge-fix">Fix</span>
+                            Resolved pagination issues in campaign search results.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="year-separator" id="2023">2023</h3>
+            
+            <div class="card" id="v2-0-0" data-version="v2">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v2.0.0
+                        <span class="release-date">November 8, 2023</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Major API upgrade with blockchain integration using Stellar network.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Introduced milestone-based fund release system.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Added webhooks for real-time event notifications.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Completely redesigned impact metrics system with verification logic.
+                        </li>
+                        <li data-type="deprecation">
+                            <span class="badge version-badge badge-deprecation">Deprecation</span>
+                            Legacy payment processing endpoints (will be removed in v2.3.0).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" id="v1-8-0" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.8.0
+                        <span class="release-date">August 22, 2023</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Added campaign update notifications API.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Enhanced donation tracking with more detailed analytics.
+                        </li>
+                        <li data-type="security">
+                            <span class="badge version-badge badge-security">Security</span>
+                            Security improvements for payment processing.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" id="v1-7-2" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.7.2
+                        <span class="release-date">June 5, 2023</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="fix">
+                            <span class="badge version-badge badge-fix">Fix</span>
+                            Fixed rate limiting issues for high-volume API consumers.
+                        </li>
+                        <li data-type="fix">
+                            <span class="badge version-badge badge-fix">Fix</span>
+                            Resolved bug in campaign location validation.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" id="v1-7-0" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.7.0
+                        <span class="release-date">March 19, 2023</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Expanded campaign search with geolocation filtering.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Performance optimization for high-traffic campaigns.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- More years and releases would follow the same pattern -->
+            <h3 class="year-separator" id="2022">2022</h3>
+            
+            <div class="card" id="v1-6-0" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.6.0
+                        <span class="release-date">December 7, 2022</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Added campaign update API endpoints for real-time progress sharing.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Enhanced data validation for campaign creation.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" id="v1-5-0" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.5.0
+                        <span class="release-date">September 14, 2022</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Introduced basic impact tracking functionality.
+                        </li>
+                        <li data-type="improvement">
+                            <span class="badge version-badge badge-improvement">Improvement</span>
+                            Expanded SDK support for Python.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="year-separator" id="2021">2021</h3>
+            
+            <div class="card" id="v1-0-0" data-version="v1">
+                <div class="card-body">
+                    <h4 class="version-title">
+                        v1.0.0
+                        <span class="release-date">May 2, 2021</span>
+                    </h4>
+                    <ul class="change-list">
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Initial release of The Give Hub API with core functionality.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Campaign creation, management, and donation processing.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            Basic user authentication and management.
+                        </li>
+                        <li data-type="feature">
+                            <span class="badge version-badge badge-feature">Feature</span>
+                            JavaScript SDK for browser and Node.js.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme switcher functionality
+            const themeSwitcher = {
+                init() {
+                    // Load saved theme on startup
+                    this.loadSavedTheme();
+                    
+                    // Add click handler for theme toggle button
+                    document.querySelector('.theme-toggle').addEventListener('click', () => this.toggleTheme());
+                },
+
+                toggleTheme() {
+                    // Get current theme
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                    
+                    // Toggle theme
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    
+                    // Apply theme
+                    this.applyTheme(newTheme);
+                    
+                    // Save preference
+                    localStorage.setItem('theme', newTheme);
+                },
+
+                applyTheme(theme) {
+                    // Set theme attribute on root element
+                    document.documentElement.setAttribute('data-theme', theme);
+                    
+                    // Update toggle button icon
+                    const toggleButton = document.querySelector('.theme-toggle i');
+                    if (toggleButton) {
+                        toggleButton.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                    
+                    // Update meta theme-color for mobile browsers
+                    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                    if (metaThemeColor) {
+                        metaThemeColor.setAttribute('content', theme === 'dark' ? '#1a1a1a' : '#ffffff');
+                    }
+
+                    // Handle syntax highlighting theme
+                    const lightTheme = document.querySelector('link[href*="github.min.css"]:not([href*="dark"])');
+                    const darkTheme = document.querySelector('#hljs-dark-theme');
+                    if (theme === 'dark') {
+                        lightTheme.disabled = true;
+                        darkTheme.disabled = false;
+                    } else {
+                        lightTheme.disabled = false;
+                        darkTheme.disabled = true;
+                    }
+                },
+
+                loadSavedTheme() {
+                    // Check if theme is saved in localStorage
+                    const savedTheme = localStorage.getItem('theme');
+                    
+                    // Check system preference if no saved theme
+                    if (!savedTheme) {
+                        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        this.applyTheme(prefersDark ? 'dark' : 'light');
+                        return;
+                    }
+                    
+                    // Apply saved theme
+                    this.applyTheme(savedTheme);
+                }
+            };
+
+            // Initialize theme switcher
+            themeSwitcher.init();
+
+            // Change filter functionality
+            const filterChanges = (filterType = 'all') => {
+                document.querySelectorAll('.filter-badge').forEach(badge => {
+                    badge.classList.toggle('active', badge.dataset.filter === filterType);
+                });
+
+                document.querySelectorAll('.change-list li').forEach(item => {
+                    if (filterType === 'all' || item.dataset.type === filterType) {
+                        item.style.display = 'list-item';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // If all items in a card are hidden, hide the card
+                document.querySelectorAll('.card').forEach(card => {
+                    const visibleItems = card.querySelectorAll('.change-list li[style="display: list-item"]').length;
+                    card.style.display = visibleItems > 0 ? 'block' : 'none';
+                });
+            };
+
+            // Add event listeners to filter badges
+            document.querySelectorAll('.filter-badge').forEach(badge => {
+                badge.addEventListener('click', () => {
+                    filterChanges(badge.dataset.filter);
+                });
+            });
+
+            // Search functionality
+            document.getElementById('searchChanges').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                
+                if (!searchTerm) {
+                    // Reset view when search is cleared
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    
+                    // Show all change items
+                    document.querySelectorAll('.change-list li').forEach(item => {
+                        item.style.display = 'list-item';
+                    });
+                    
+                    return;
+                }
+                
+                document.querySelectorAll('.card').forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    const hasMatch = cardText.includes(searchTerm);
+                    
+                    // Show/hide the whole card based on match
+                    card.style.display = hasMatch ? 'block' : 'none';
+                    
+                    // If card is visible, check individual items
+                    if (hasMatch) {
+                        card.querySelectorAll('.change-list li').forEach(item => {
+                            const itemText = item.textContent.toLowerCase();
+                            item.style.display = itemText.includes(searchTerm) ? 'list-item' : 'none';
+                        });
+                    }
+                });
+            });
+
+            // Version filter functionality
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#v')) {
+                        e.preventDefault();
+                        const version = this.getAttribute('href').substring(1);
+                        
+                        document.querySelectorAll('.card').forEach(card => {
+                            card.style.display = card.dataset.version === version ? 'block' : 'none';
+                        });
+                    }
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#v')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

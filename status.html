@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>The Give Hub - API Status</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            /* Light theme variables */
+            --sidebar-width: 260px;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --link-color: #0d6efd;
+            --code-bg: #f8f9fa;
+            --navbar-bg: #0d6efd;
+            --navbar-text: #ffffff;
+            
+            /* Status colors */
+            --status-operational: #2ecc71;
+            --status-degraded: #f39c12;
+            --status-partial: #e67e22;
+            --status-major: #e74c3c;
+            --status-maintenance: #3498db;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e9ecef;
+            --text-secondary: #adb5bd;
+            --border-color: #444444;
+            --link-color: #7cb3ff;
+            --code-bg: #2d2d2d;
+            --navbar-bg: #2d2d2d;
+            --navbar-text: #e9ecef;
+            
+            /* Status colors remain the same for visibility */
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--navbar-bg) !important;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--navbar-text);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .card-body {
+            color: var(--text-primary);
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover {
+            color: var(--link-color);
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--link-color);
+            color: #ffffff;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--navbar-text);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+        }
+        
+        /* Status indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-operational {
+            background-color: var(--status-operational);
+        }
+        
+        .status-degraded {
+            background-color: var(--status-degraded);
+        }
+        
+        .status-partial {
+            background-color: var(--status-partial);
+        }
+        
+        .status-major {
+            background-color: var(--status-major);
+        }
+        
+        .status-maintenance {
+            background-color: var(--status-maintenance);
+        }
+        
+        /* Status overview section */
+        .status-overview {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .status-header h2 {
+            margin: 0;
+            margin-left: 0.5rem;
+        }
+        
+        .system-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .system-status:last-child {
+            border-bottom: none;
+        }
+        
+        .system-name {
+            font-weight: 500;
+        }
+        
+        .status-text {
+            font-weight: 600;
+        }
+        
+        .status-text.operational { color: var(--status-operational); }
+        .status-text.degraded { color: var(--status-degraded); }
+        .status-text.partial { color: var(--status-partial); }
+        .status-text.major { color: var(--status-major); }
+        .status-text.maintenance { color: var(--status-maintenance); }
+        
+        /* Incident history */
+        .incident {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .incident.resolved {
+            border-left: 4px solid var(--status-operational);
+        }
+        
+        .incident.investigating {
+            border-left: 4px solid var(--status-major);
+        }
+        
+        .incident.monitoring {
+            border-left: 4px solid var(--status-degraded);
+        }
+        
+        .incident-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        
+        .incident-title {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        .incident-status {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .incident-status.resolved {
+            background-color: var(--status-operational);
+            color: white;
+        }
+        
+        .incident-status.investigating {
+            background-color: var(--status-major);
+            color: white;
+        }
+        
+        .incident-status.monitoring {
+            background-color: var(--status-degraded);
+            color: white;
+        }
+        
+        .incident-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .incident-updates {
+            margin-top: 1rem;
+        }
+        
+        .update {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .update:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--link-color);
+        }
+        
+        .update-time {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .update-message {
+            margin: 0;
+        }
+        
+        /* Uptime metrics */
+        .uptime-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Uptime graphs */
+        .uptime-graph {
+            height: 40px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            margin-top: 0.5rem;
+        }
+        
+        .uptime-bar {
+            flex: 1;
+            background-color: var(--status-operational);
+            min-height: 4px;
+        }
+        
+        .uptime-bar.degraded {
+            background-color: var(--status-degraded);
+        }
+        
+        .uptime-bar.down {
+            background-color: var(--status-major);
+        }
+        
+        .uptime-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.25rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Form styling */
+        .form-control {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .form-control:focus {
+            background-color: var(--bg-primary);
+            border-color: var(--link-color);
+            color: var(--text-primary);
+        }
+        
+        .form-check-input {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--link-color);
+            border-color: var(--link-color);
+        }
+        
+        /* Table styling */
+        .table {
+            color: var(--text-primary);
+        }
+        
+        .table thead th {
+            border-bottom-color: var(--border-color);
+        }
+        
+        .table td, .table th {
+            border-color: var(--border-color);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                margin-bottom: 1rem;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .incident-header {
+                flex-direction: column;
+            }
+            
+            .incident-status {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">The Give Hub Developers</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="theme-toggle" onclick="switchTheme()" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/thegivehub">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="d-flex flex-column flex-lg-row">
+        <div class="sidebar border-end">
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="index.html">Back to Docs</a>
+                <a class="nav-link" href="changelog.html">Changelog</a>
+                <a class="nav-link active" href="api-status.html">API Status</a>
+            </nav>
+            <div class="mt-4">
+                <h6>Services</h6>
+                <nav class="nav nav-pills flex-column">
+                    <a class="nav-link" href="#core-api">Core API</a>
+                    <a class="nav-link" href="#webhooks">Webhooks</a>
+                    <a class="nav-link" href="#blockchain">Blockchain Services</a>
+                    <a class="nav-link" href="#auth">Authentication</a>
+                    <a class="nav-link" href="#sdks">SDKs</a>
+                </nav>
+            </div>
+            <div class="mt-4">
+                <h6>Regions</h6>
+                <nav class="nav nav-pills flex-column">
+                    <a class="nav-link" href="#global">Global</a>
+                    <a class="nav-link" href="#africa">Africa</a>
+                    <a class="nav-link" href="#europe">Europe</a>
+                    <a class="nav-link" href="#americas">Americas</a>
+                    <a class="nav-link" href="#asia-pacific">Asia Pacific</a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1>API Status</h1>
+            <p class="lead">Current operational status of The Give Hub's services and APIs.</p>
+            
+            <div class="status-overview">
+                <div class="status-header">
+                    <span class="status-indicator status-degraded"></span>
+                    <h2>Partial System Outage</h2>
+                </div>
+                <p>Last updated: <span id="lastUpdated">March 16, 2025 04:30 UTC</span></p>
+            </div>
+            
+            <h3>Current Status</h3>
+            <div class="card mb-4">
+                <div class="card-body p-0">
+                    <div class="system-status" id="core-api">
+                        <div class="system-name">Core API (v2.x)</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="webhooks">
+                        <div class="system-name">Webhooks</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="blockchain">
+                        <div class="system-name">Blockchain Services</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-degraded"></span>
+                            <span class="status-text degraded">Degraded Performance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="auth">
+                        <div class="system-name">Authentication</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="sdks">
+                        <div class="system-name">SDKs &amp; Libraries</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Regional Status</h3>
+            <div class="card mb-4">
+                <div class="card-body p-0">
+                    <div class="system-status" id="global">
+                        <div class="system-name">Global</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="africa">
+                        <div class="system-name">Africa</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="europe">
+                        <div class="system-name">Europe</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="americas">
+                        <div class="system-name">Americas</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-status" id="asia-pacific">
+                        <div class="system-name">Asia Pacific</div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator status-operational"></span>
+                            <span class="status-text operational">Operational</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>System Metrics</h3>
+            <div class="uptime-metrics">
+                <div class="metric-card">
+                    <div class="metric-value">99.98%</div>
+                    <div class="metric-label">30-Day Uptime</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">42ms</div>
+                    <div class="metric-label">Average Response Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">99.99%</div>
+                    <div class="metric-label">Webhook Delivery Rate</div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">API Uptime History</h5>
+                </div>
+                <div class="card-body">
+                    <div id="core-api-uptime">
+                        <h6>Core API - Last 30 Days</h6>
+                        <div class="uptime-graph">
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 80%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                        </div>
+                        <div class="uptime-labels">
+                            <span>Feb 15</span>
+                            <span>Feb 25</span>
+                            <span>Mar 5</span>
+                            <span>Mar 15</span>
+                        </div>
+                    </div>
+                    
+                    <div id="blockchain-uptime" class="mt-4">
+                        <h6>Blockchain Services - Last 30 Days</h6>
+                        <div class="uptime-graph">
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 90%"></div>
+                            <div class="uptime-bar" style="height: 85%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar" style="height: 100%"></div>
+                            <div class="uptime-bar degraded" style="height: 75%"></div>
+                            <div class="uptime-bar degraded" style="height: 60%"></div>
+                            <div class="uptime-bar degraded" style="height: 65%"></div>
+                            <div class="uptime-bar degraded" style="height: 70%"></div>
+                            <div class="uptime-bar degraded" style="height: 70%"></div>
+                        </div>
+                        <div class="uptime-labels">
+                            <span>Feb 15</span>
+                            <span>Feb 25</span>
+                            <span>Mar 5</span>
+                            <span>Mar 15</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Recent Incidents</h3>
+            
+            <div class="incident investigating" id="incident-003">
+                <div class="incident-header">
+                    <h4 class="incident-title">Degraded Performance: Blockchain Services</h4>
+                    <span class="incident-status investigating">Investigating</span>
+                </div>
+                <div class="incident-date">March 16, 2025</div>
+                <p>We are currently investigating degraded performance with our Stellar blockchain integration services. This may affect transaction speeds and milestone verification processes.</p>
+                
+                <div class="incident-updates">
+                    <div class="update">
+                        <div class="update-time">11:30 UTC</div>
+                        <p class="update-message">Engineering team identified the issue with Stellar network congestion. We are implementing temporary routing through alternative validators to improve performance.</p>
+                    </div>
+                    <div class="update">
+                        <div class="update-time">04:30 UTC</div>
+                        <p class="update-message">We are investigating reports of slow transaction processing times and occasional timeouts with blockchain services.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident resolved" id="incident-002">
+                <div class="incident-header">
+                    <h4 class="incident-title">Webhook Delivery Delays</h4>
+                    <span class="incident-status resolved">Resolved</span>
+                </div>
+                <div class="incident-date">March 2-3, 2025</div>
+                <p>Some webhook deliveries experienced delays of up to 15 minutes. No webhooks were lost, but delivery timing was affected.</p>
+                
+                <div class="incident-updates">
+                    <div class="update">
+                        <div class="update-time">March 3, 10:15 UTC</div>
+                        <p class="update-message">The issue has been fully resolved. All webhooks are now being delivered in real-time.</p>
+                    </div>
+                    <div class="update">
+                        <div class="update-time">March 3, 02:45 UTC</div>
+                        <p class="update-message">We've identified the cause as a queue processing bottleneck. Implementing fixes now.</p>
+                    </div>
+                    <div class="update">
+                        <div class="update-time">March 2, 22:30 UTC</div>
+                        <p class="update-message">We are investigating reports of delayed webhook deliveries. Current delays range from 5-15 minutes. No webhooks are being dropped.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident resolved" id="incident-001">
+                <div class="incident-header">
+                    <h4 class="incident-title">API Authentication Issues</h4>
+                    <span class="incident-status resolved">Resolved</span>
+                </div>
+                <div class="incident-date">February 15, 2025</div>
+                <p>Some users experienced intermittent authentication failures when using API keys.</p>
+                
+                <div class="incident-updates">
+                    <div class="update">
+                        <div class="update-time">18:45 UTC</div>
+                        <p class="update-message">The issue has been fully resolved. All authentication systems are functioning normally. Root cause was identified as a configuration error during database maintenance.</p>
+                    </div>
+                    <div class="update">
+                        <div class="update-time">16:20 UTC</div>
+                        <p class="update-message">We have identified the issue and deployed a fix. Services are recovering.</p>
+                    </div>
+                    <div class="update">
+                        <div class="update-time">15:10 UTC</div>
+                        <p class="update-message">We are investigating reports of authentication failures. Some API requests are returning 401 errors intermittently.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-info mt-4">
+                <h5>Subscribe to Updates</h5>
+                <p>Stay informed about service disruptions and maintenance:</p>
+                <ul>
+                    <li>Follow <a href="https://twitter.com/givehubstatus">@GiveHubStatus</a> on Twitter</li>
+                    <li>Subscribe to the <a href="#subscribe-form">Status Updates RSS feed</a></li>
+                    <li>Join our <a href="https://discord.gg/2NR46tPC">Developer Discord</a> for real-time updates</li>
+                </ul>
+            </div>
+            
+            <div class="card mt-4" id="subscribe-form">
+                <div class="card-body">
+                    <h5 class="card-title">Get Status Notifications</h5>
+                    <p class="card-text">Receive email notifications when services experience issues.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your email address">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="allServices">
+                            <label class="form-check-label" for="allServices">
+                                All services
+                            </label>
+                        </div>
+                        <div class="d-flex flex-wrap">
+                            <div class="form-check me-3 mb-2">
+                                <input class="form-check-input" type="checkbox" id="core-api-check">
+                                <label class="form-check-label" for="core-api-check">
+                                    Core API
+                                </label>
+                            </div>
+                            <div class="form-check me-3 mb-2">
+                                <input class="form-check-input" type="checkbox" id="webhooks-check">
+                                <label class="form-check-label" for="webhooks-check">
+                                    Webhooks
+                                </label>
+                            </div>
+                            <div class="form-check me-3 mb-2">
+                                <input class="form-check-input" type="checkbox" id="blockchain-check">
+                                <label class="form-check-label" for="blockchain-check">
+                                    Blockchain Services
+                                </label>
+                            </div>
+                            <div class="form-check me-3 mb-2">
+                                <input class="form-check-input" type="checkbox" id="auth-check">
+                                <label class="form-check-label" for="auth-check">
+                                    Authentication
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Scheduled Maintenance</h5>
+                    <p class="card-text">We perform regular maintenance to ensure optimal performance and reliability.</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time (UTC)</th>
+                                    <th>Services Affected</th>
+                                    <th>Expected Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>March 18, 2025</td>
+                                    <td>02:00 - 04:00</td>
+                                    <td>Authentication, Webhooks</td>
+                                    <td>~30 minutes</td>
+                                </tr>
+                                <tr>
+                                    <td>March 25, 2025</td>
+                                    <td>01:00 - 03:00</td>
+                                    <td>Blockchain Services</td>
+                                    <td>~1 hour</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Historical Uptime</h3>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time Period</th>
+                                <th>Core API</th>
+                                <th>Webhooks</th>
+                                <th>Blockchain</th>
+                                <th>Authentication</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Past 30 days</td>
+                                <td>99.98%</td>
+                                <td>99.99%</td>
+                                <td>98.92%</td>
+                                <td>99.95%</td>
+                            </tr>
+                            <tr>
+                                <td>Past 90 days</td>
+                                <td>99.97%</td>
+                                <td>99.98%</td>
+                                <td>99.51%</td>
+                                <td>99.93%</td>
+                            </tr>
+                            <tr>
+                                <td>Past 12 months</td>
+                                <td>99.95%</td>
+                                <td>99.93%</td>
+                                <td>99.87%</td>
+                                <td>99.94%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top">
+                <div class="row">
+                    <div class="col-12 col-md">
+                        <small class="d-block mb-3 text-muted">© 2021-2025 The Give Hub</small>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5>Resources</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="api-status.html">API Status</a></li>
+                            <li><a class="text-muted" href="changelog.html">Change Log</a></li>
+                            <li><a class="text-muted" href="#">Support</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5>Community</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#">Discord</a></li>
+                            <li><a class="text-muted" href="#">GitHub</a></li>
+                            <li><a class="text-muted" href="#">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme switcher functionality
+            const themeSwitcher = {
+                init() {
+                    // Load saved theme on startup
+                    this.loadSavedTheme();
+                    
+                    // Add click handler for theme toggle button
+                    document.querySelector('.theme-toggle').addEventListener('click', () => this.toggleTheme());
+                },
+
+                toggleTheme() {
+                    // Get current theme
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                    
+                    // Toggle theme
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    
+                    // Apply theme
+                    this.applyTheme(newTheme);
+                    
+                    // Save preference
+                    localStorage.setItem('theme', newTheme);
+                },
+
+                applyTheme(theme) {
+                    // Set theme attribute on root element
+                    document.documentElement.setAttribute('data-theme', theme);
+                    
+                    // Update toggle button icon
+                    const toggleButton = document.querySelector('.theme-toggle i');
+                    if (toggleButton) {
+                        toggleButton.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                    
+                    // Update meta theme-color for mobile browsers
+                    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                    if (metaThemeColor) {
+                        metaThemeColor.setAttribute('content', theme === 'dark' ? '#1a1a1a' : '#ffffff');
+                    }
+                },
+
+                loadSavedTheme() {
+                    // Check if theme is saved in localStorage
+                    const savedTheme = localStorage.getItem('theme');
+                    
+                    // Check system preference if no saved theme
+                    if (!savedTheme) {
+                        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        this.applyTheme(prefersDark ? 'dark' : 'light');
+                        return;
+                    }
+                    
+                    // Apply saved theme
+                    this.applyTheme(savedTheme);
+                }
+            };
+
+            // Initialize theme switcher
+            themeSwitcher.init();
+            
+            // "All services" checkbox functionality
+            const allServicesCheckbox = document.getElementById('allServices');
+            const serviceCheckboxes = document.querySelectorAll('input[type=checkbox]:not(#allServices)');
+            
+            if (allServicesCheckbox) {
+                allServicesCheckbox.addEventListener('change', function() {
+                    serviceCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                        checkbox.disabled = this.checked;
+                    });
+                });
+            }
+
+            // Update "last updated" timestamp to show relative time
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            if (lastUpdatedElement) {
+                const updateRelativeTime = () => {
+                    const lastUpdated = new Date(lastUpdatedElement.textContent);
+                    const now = new Date();
+                    const diffMs = now - lastUpdated;
+                    const diffMinutes = Math.floor(diffMs / 60000);
+                    
+                    if (diffMinutes < 60) {
+                        lastUpdatedElement.textContent = `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+                    } else if (diffMinutes < 1440) {
+                        const hours = Math.floor(diffMinutes / 60);
+                        lastUpdatedElement.textContent = `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+                    } else {
+                        // Keep the original timestamp when it's over a day
+                    }
+                };
+                
+                // Update immediately and then every minute
+                updateRelativeTime();
+                setInterval(updateRelativeTime, 60000);
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#subscribe-form') return; // Let the form anchor work normally
+                    
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Auto-update status overview based on current status
+            const updateOverallStatus = () => {
+                const statuses = Array.from(document.querySelectorAll('.system-status .status-indicator'))
+                    .map(indicator => indicator.className);
+                
+                const statusHeader = document.querySelector('.status-header');
+                const statusIndicator = statusHeader.querySelector('.status-indicator');
+                const statusTitle = statusHeader.querySelector('h2');
+                
+                if (statuses.some(s => s.includes('major'))) {
+                    statusIndicator.className = 'status-indicator status-major';
+                    statusTitle.textContent = 'Major System Outage';
+                } else if (statuses.some(s => s.includes('partial'))) {
+                    statusIndicator.className = 'status-indicator status-partial';
+                    statusTitle.textContent = 'Partial System Outage';
+                } else if (statuses.some(s => s.includes('degraded'))) {
+                    statusIndicator.className = 'status-indicator status-degraded';
+                    statusTitle.textContent = 'Degraded Performance';
+                } else if (statuses.some(s => s.includes('maintenance'))) {
+                    statusIndicator.className = 'status-indicator status-maintenance';
+                    statusTitle.textContent = 'Scheduled Maintenance';
+                } else {
+                    statusIndicator.className = 'status-indicator status-operational';
+                    statusTitle.textContent = 'All Systems Operational';
+                }
+            };
+            
+            // Run once on page load
+            updateOverallStatus();
+        });
+    </script>
+</body>
+</html>
